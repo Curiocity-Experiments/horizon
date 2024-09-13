@@ -1,7 +1,7 @@
 import '../styles/globals.css'
 import { useState, useEffect } from 'react'
+import { SessionProvider } from 'next-auth/react'
 import { auth } from '../lib/firebase'
-import Layout from '../components/Layout'
 import { getConfig } from '../config/privateLabel'
 import { useRemoteConfig } from '../hooks/useRemoteConfig'
 
@@ -17,14 +17,11 @@ function MyApp({ Component, pageProps }) {
     return () => unsubscribe()
   }, [])
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-
   return (
-    <Layout config={config} user={user}>
+    <SessionProvider session={pageProps.session}>
       <Component {...pageProps} config={config} user={user} remoteConfig={remoteConfig} />
-    </Layout>
-  )
+    </SessionProvider>
+  );
 }
 
 export default MyApp

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import VoteButton from './VoteButton';
 import { Filter, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -16,19 +16,14 @@ export default function FeedbackList({ config }) {
   const [hasNextPage, setHasNextPage] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    fetchFeedbackItems();
-    fetchCategories();
-  }, [selectedCategory, sortBy, sortOrder, currentPage]);
-
-  const fetchFeedbackItems = async () => {
+  const fetchFeedbackItems = useCallback(async () => {
     setIsLoading(true);
     const queryParams = new URLSearchParams({
       category: selectedCategory,
       sortBy,
       sortOrder,
-      page: currentPage,
-      pageSize: 10,
+      page: currentPage.toString(),
+      pageSize: '10',
     }).toString();
 
     try {
@@ -45,10 +40,9 @@ export default function FeedbackList({ config }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [selectedCategory, sortBy, sortOrder, currentPage]);
 
-  const fetchCategories = async () => {
-    // TODO: Implement fetching categories from Firestore
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await fetch('/api/admin/categories');
       if (!response.ok) {
@@ -60,7 +54,12 @@ export default function FeedbackList({ config }) {
       logger.error('Error fetching categories:', error);
       setError('Failed to load categories. Please try again later.');
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchFeedbackItems();
+    fetchCategories();
+  }, [fetchFeedbackItems, fetchCategories]);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);

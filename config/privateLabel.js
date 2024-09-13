@@ -3,7 +3,7 @@
 const defaultConfig = {
   name: 'Abstracta Feedback',
   logo: '/logo.svg',
-  favicon: '/favicon.ico',
+  favicon: '/images/favicon/favicon.ico',
   colors: {
     primary: '#3B82F6', // blue-500
     secondary: '#1D4ED8', // blue-700
@@ -32,6 +32,6 @@ const configs = {
   // Add more client configurations as needed
 };
 
-export function getConfig(hostname) {
+export function getConfig(hostname = '') {
   return configs[hostname] || defaultConfig;
 }

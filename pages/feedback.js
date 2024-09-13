@@ -1,40 +1,33 @@
-// pages/api/admin/feedback.ts
+import { useState, useEffect } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
-import { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
-import { authMiddleware, isAdminMiddleware } from '../../../lib/auth';
+export default function Feedback() {
+  const [feedbackItems, setFeedbackItems] = useState([]);
 
-const prisma = new PrismaClient();
+  useEffect(() => {
+    const fetchFeedback = async () => {
+      const feedbackCollection = collection(db, 'feedback');
+      const feedbackSnapshot = await getDocs(feedbackCollection);
+      const feedbackList = feedbackSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setFeedbackItems(feedbackList);
+    };
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'PUT') {
-    try {
-      const { id, status, category } = req.body;
+    fetchFeedback();
+  }, []);
 
-      const updatedFeedback = await prisma.feedback.update({
-        where: { id },
-        data: { status, category },
-      });
-
-      res.status(200).json(updatedFeedback);
-    } catch (error) {
-      res.status(500).json({ message: 'Error updating feedback', error });
-    }
-  } else if (req.method === 'DELETE') {
-    try {
-      const { id } = req.body;
-
-      await prisma.feedback.delete({
-        where: { id },
-      });
-
-      res.status(200).json({ message: 'Feedback deleted successfully' });
-    } catch (error) {
-      res.status(500).json({ message: 'Error deleting feedback', error });
-    }
-  } else {
-    res.status(405).json({ message: 'Method not allowed' });
-  }
+  return (
+    <div>
+      <h1>Feedback</h1>
+      {feedbackItems.map((item) => (
+        <div key={item.id}>
+          <h2>{item.title}</h2>
+          <p>{item.description}</p>
+        </div>
+      ))}
+    </div>
+  );
 }
-
-export default authMiddleware(isAdminMiddleware(handler));

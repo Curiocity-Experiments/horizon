@@ -1,0 +1,15 @@
+# curiocity-horizon-firebase-adminsdk-j1x58-32bc6b6f85.json
+
+{
+  "type": "service_account",
+  "project_id": "curiocity-horizon",
+  "private_key_id": "32bc6b6f85b08cad1643b9be4029a0d1c302ee66",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCmd6uQWiK+Q3Rs\npUrVfd3ctj22vYYdUp8zXK0zeliAH0Nt4guE2xvHQ/mQgzw49wYq3Ha5Z8KWLST7\n9mb+JQMhafCd+uRLl8NbyaEkW11EUcQer/NP0LM5uoWRmDq8dDWk2Vnl9mDinVGm\nipYahVtDGYNZo7m0AbFDBercnD6MP8jA6yoxWrsFQE+UeXgUbV0rTdtQgEa+fN+u\n0b/8mxtNUkClQx6hXbTSQwGUy8wq6fCz/vqyA3R5plPug3opA/x6CHCHHVLjZ5g5\nCdUYbn7dmhPBfO7jHFZRQT2O0KFowI4LtjRRE2dc2nbQYwJzDIlub0LZRpiKksqA\ngiqtQfcfAgMBAAECggEAL0Q+fiPhxpVfqvO6DmmJRACpAEjLGmtZ0dsoQLwmAece\nncY30Bboyck2xP5GbMRTR3tG6LkaCssxu6tIrjPzMhsjG7Bf/0jNyzOyoiChGGOB\nJNd/5jNTmHoqL9+CGf2DN9YRTRcKhn3176xdF5WzBpfpcFvpQD/UxbuZ5t8kcWy7\nbQHVqwV0oqdD+aNmJFXOgXIJfUpoRrUDOZkuWvlDhn+9Xv5xm8diWb1GpHqxrRNd\n5SpH0qfKtiDCtOOFZCehaqcp1s2WLuRIq7ninvVpdllXX31J7ta+d9hcPOJyzFQ6\nt6iQwHm+Nzrq9yQmZOJIXwbMRyVgRmZZmvO/IiYTGQKBgQDfJ2E/mZSrxkwdnU6H\nEdzCJ5ahTNYyxKIDmwZRLANGLTCTWVS2lfpr9Ul0KXVzH6k0dxxFS8EkEyVLxthD\nbBHm5/fe+qU372/Bm0ktD3f3LcvyeB0ZoZa8wOfzFXmEEqt04JBBpIs5yOYb3yPh\n5aPm+tbiY0A4WuIOTIJAuWihiQKBgQC++E0ihklgVgFfbWYBAaFNUUjsMwgbdVQK\nXl3Z1F/qpRyG1BFXX+eug1oi2lUPNKJA17THzrHkrtiuU1g6EJwGgKkrfeF28ofs\nTB+sGjbKcJK5PJk+IcERXCSLeuRs8fGXKHm3a9wRCD+vzXStKCraxOJIbZUwmLQx\n7QIGQJ/xZwKBgQC+LgSOPGhdALGr532eVVXLzgtsylwehkABTKRUl2ru6uJkIZS1\nyxnR2gjQy+iBxbDhusVINWiUQxDdBMkYpMiY/obb7MbT5eZbnOj/UxiNeuU+bql2\nR6V8lfbXzyxxp6uh/yRSHVZeV93sUP52rcxCtPJfm/CGVsYjI4c6fAk06QKBgQCq\nJCTs7oFvUBD3CUvI97/TV+lFb434kMboWfz5twohzyskQMqWcv7Cb4qd5LHF01n/\ntW7+WXwKx3CLl/vR97xa2sRd2FBJHnnVIFlThyNrp3JBkOji/0W5BsQUdNAQ9FoP\nF2Oh9Hnjvtqm8cDTCSdtM957Mw6pdlOM66FTGr6lXwKBgAloHRwSuIukR9uYH2gP\nYbTiUohWVbbLha0qY9+4A6JbPjv0jOyuGPeh4uIrppiabme8QyaGRd72cPnWTc3y\nhNokFOUlzmQ2Bwpa/2PBcVimfFLQP8IS+h7JvojiXtlRh2sOpI1s3Dg5RT1GqPh9\nwUMcTcMrnNjeJyAEQXxOr62T\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-j1x58@curiocity-horizon.iam.gserviceaccount.com",
+  "client_id": "100943130787326935274",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-j1x58%40curiocity-horizon.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

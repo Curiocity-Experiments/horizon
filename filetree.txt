@@ -1,0 +1,85 @@
+./
+├── .git/
+│   ├── hooks/
+│   ├── info/
+│   ├── logs/
+│   ├── objects/
+│   ├── refs/
+│   ├── .DS_Store
+│   ├── COMMIT_EDITMSG
+│   ├── config
+│   ├── description
+│   ├── FETCH_HEAD
+│   ├── HEAD
+│   ├── index
+│   ├── ORIG_HEAD
+│   └── packed-refs
+├── .next/
+│   ├── cache/
+│   ├── server/
+│   ├── static/
+│   ├── build-manifest.json
+│   ├── BUILD_ID
+│   ├── export-marker.json
+│   ├── images-manifest.json
+│   ├── next-server.js.nft.json
+│   ├── package.json
+│   ├── prerender-manifest.json
+│   ├── react-loadable-manifest.json
+│   ├── required-server-files.json
+│   ├── routes-manifest.json
+│   └── trace
+├── __tests__/
+│   ├── components/
+│   ├── pages/
+│   └── .DS_Store
+├── components/
+│   ├── FeedbackList.js
+│   ├── FeedbackSubmissionForm.js
+│   ├── Layout.js
+│   └── VoteButton.js
+├── config/
+│   └── privateLabel.js
+├── hooks/
+│   └── useRemoteConfig.js
+├── images/
+│   ├── favicon/
+│   └── .DS_Store
+├── lib/
+│   ├── auth.js
+│   ├── firebase.ts
+│   ├── logger.js
+│   └── validationMiddleware.js
+├── pages/
+│   ├── api/
+│   ├── .DS_Store
+│   ├── _app.js
+│   ├── _document.js
+│   ├── admin.js
+│   ├── feedback.js
+│   ├── index.js
+│   ├── profile.js
+│   └── submit-feedback.js
+├── styles/
+│   └── globals.css
+├── .DS_Store
+├── .env
+├── .env.example
+├── .gitignore
+├── contributing.md
+├── database.rules.json
+├── filetree.txt
+├── firebase-admin-key.json
+├── jest.config.js
+├── jest.setup.js
+├── LICENSE
+├── next-env.d.ts
+├── next.config.js
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── readme.md
+├── signin.react
+├── tailwind.config.js
+├── tsconfig.json
+└── vote.js
