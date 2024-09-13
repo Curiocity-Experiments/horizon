@@ -2,6 +2,19 @@
 
 import '@testing-library/jest-dom/extend-expect';
 
+// Mock Firebase
+jest.mock('../lib/firebase', () => ({
+  db: {
+    collection: jest.fn(),
+    doc: jest.fn(),
+  },
+  auth: {
+    onAuthStateChanged: jest.fn(),
+    signInWithPopup: jest.fn(),
+    signOut: jest.fn(),
+  },
+}));
+
 // Mock Next.js router
 jest.mock('next/router', () => ({
   useRouter() {
@@ -20,24 +33,6 @@ jest.mock('next/router', () => ({
     };
   },
 }));
-
-// Mock next-auth
-jest.mock('next-auth/react', () => {
-  const originalModule = jest.requireActual('next-auth/react');
-  const mockSession = {
-    expires: new Date(Date.now() + 2 * 86400).toISOString(),
-    user: { username: "admin", role: "ADMIN" }
-  };
-  return {
-    __esModule: true,
-    ...originalModule,
-    useSession: jest.fn(() => {
-      return {data: mockSession, status: 'authenticated'}
-    }),
-    signIn: jest.fn(() => Promise.resolve({ ok: true })),
-    signOut: jest.fn(() => Promise.resolve({ ok: true })),
-  };
-});
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { db } from '../lib/firebase';
+import { collection, query, getDocs, updateDoc, deleteDoc, doc, addDoc } from 'firebase/firestore';
 
 export default function AdminDashboard() {
   const [feedbackItems, setFeedbackItems] = useState([]);
@@ -11,27 +13,21 @@ export default function AdminDashboard() {
   }, []);
 
   const fetchFeedbackItems = async () => {
-    const response = await fetch('/api/feedback/list');
-    const data = await response.json();
-    setFeedbackItems(data.feedbackItems);
+    const q = query(collection(db, 'feedback'));
+    const querySnapshot = await getDocs(q);
+    setFeedbackItems(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
   };
 
   const fetchCategories = async () => {
-    const response = await fetch('/api/admin/categories');
-    const data = await response.json();
-    setCategories(data);
+    const q = query(collection(db, 'categories'));
+    const querySnapshot = await getDocs(q);
+    setCategories(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
   };
 
   const handleStatusChange = async (feedbackId, newStatus) => {
     try {
-      const response = await fetch('/api/admin/feedback', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: feedbackId, status: newStatus }),
-      });
-      if (response.ok) {
-        fetchFeedbackItems();
-      }
+      await updateDoc(doc(db, 'feedback', feedbackId), { status: newStatus });
+      fetchFeedbackItems();
     } catch (error) {
       console.error('Error updating feedback status:', error);
     }
@@ -40,14 +36,8 @@ export default function AdminDashboard() {
   const handleDeleteFeedback = async (feedbackId) => {
     if (confirm('Are you sure you want to delete this feedback?')) {
       try {
-        const response = await fetch('/api/admin/feedback', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: feedbackId }),
-        });
-        if (response.ok) {
-          fetchFeedbackItems();
-        }
+        await deleteDoc(doc(db, 'feedback', feedbackId));
+        fetchFeedbackItems();
       } catch (error) {
         console.error('Error deleting feedback:', error);
       }
@@ -57,15 +47,9 @@ export default function AdminDashboard() {
   const handleAddCategory = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/admin/categories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newCategoryName }),
-      });
-      if (response.ok) {
-        setNewCategoryName('');
-        fetchCategories();
-      }
+      await addDoc(collection(db, 'categories'), { name: newCategoryName });
+      setNewCategoryName('');
+      fetchCategories();
     } catch (error) {
       console.error('Error adding category:', error);
     }

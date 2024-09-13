@@ -33,6 +33,6 @@ module.exports = {
   },
   env: {
     // Add any public environment variables here
-    APP_NAME: 'Abstracta Feedback',
+    APP_NAME: 'Curiocity Horizon',
   },
 };

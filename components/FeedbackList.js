@@ -13,7 +13,7 @@ export default function FeedbackList({ config }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function FeedbackList({ config }) {
       sortBy,
       sortOrder,
       page: currentPage,
-      limit: 10, // You can make this configurable if needed
+      pageSize: 10,
     }).toString();
 
     try {
@@ -38,7 +38,7 @@ export default function FeedbackList({ config }) {
       }
       const data = await response.json();
       setFeedbackItems(data.feedbackItems);
-      setTotalPages(data.totalPages);
+      setHasNextPage(data.hasNextPage);
     } catch (error) {
       logger.error('Error fetching feedback items:', error);
       setError('Failed to load feedback items. Please try again later.');
@@ -48,6 +48,7 @@ export default function FeedbackList({ config }) {
   };
 
   const fetchCategories = async () => {
+    // TODO: Implement fetching categories from Firestore
     try {
       const response = await fetch('/api/admin/categories');
       if (!response.ok) {

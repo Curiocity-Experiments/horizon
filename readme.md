@@ -1,6 +1,6 @@
-# Abstracta Feedback
+# Curiocity Horizon
 
-Abstracta Feedback is a customizable, private-label user feedback platform built with Next.js, Tailwind CSS, and Prisma.
+Horizon Feedback is a customizable, private-label user feedback platform built with Next.js, Tailwind CSS, and Firebase.
 
 ## Features
 
@@ -15,15 +15,15 @@ Abstracta Feedback is a customizable, private-label user feedback platform built
 ## Prerequisites
 
 - Node.js (v14 or later)
-- MySQL database
+- Firebase account
 - Google OAuth credentials
 
 ## Installation
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/abstracta-feedback.git
-   cd abstracta-feedback
+   gh repo clone Curiocity-Experiments/horizon
+   cd horizon
    ```
 
 2. Install dependencies:
@@ -31,16 +31,18 @@ Abstracta Feedback is a customizable, private-label user feedback platform built
    npm install
    ```
 
-3. Set up environment variables:
+3. Set up Firebase:
+   - Create a new Firebase project in the [Firebase Console](https://console.firebase.google.com/)
+   - Enable Firestore and Authentication (with Google provider) in your Firebase project
+   - Generate a new private key for your service account in Project Settings > Service Accounts
+   - Save the private key as `firebase-admin-key.json` in the root of your project
+
+4. Set up environment variables:
    Copy the `.env.example` file to `.env.local` and fill in the required values:
    ```
    cp .env.example .env.local
    ```
-
-4. Set up the database:
-   ```
-   npx prisma db push
-   ```
+   Update the Firebase configuration variables in `.env.local` with your Firebase project details.
 
 5. Run the development server:
    ```
@@ -55,7 +57,7 @@ To set up private labeling, edit the `config/privateLabel.js` file. Add new clie
 
 ### Authentication
 
-This project uses NextAuth.js with Google authentication. Make sure to set up your Google OAuth credentials and update the `.env.local` file accordingly.
+This project uses Firebase Authentication with Google sign-in. Make sure to set up your Google OAuth credentials in the Firebase Console and update the `.env.local` file accordingly.
 
 ## Deployment
 
@@ -71,70 +73,35 @@ This project uses NextAuth.js with Google authentication. Make sure to set up yo
    npm start
    ```
 
-For deployment to platforms like Vercel or Netlify, refer to their respective documentation for Next.js deployments.
+For deployment to platforms like Vercel or Netlify, refer to their respective documentation for Next.js deployments and ensure you set up the necessary environment variables.
 
-### Deploying to Dreamhost Shared Server
+### Deploying to Firebase Hosting
 
-To deploy Abstracta Feedback to a Dreamhost shared server, follow these steps:
-
-1. Ensure you have SSH access to your Dreamhost server.
-
-2. Install Node.js on your Dreamhost server:
-   - Log in to your server via SSH
-   - Use the Dreamhost panel to install Node.js, or install it manually using NVM (Node Version Manager)
-
-3. Set up a MySQL database for your application through the Dreamhost panel.
-
-4. In your Dreamhost panel, create a new subdomain or use an existing domain for your application.
-
-5. Connect to your Dreamhost server via SSH and navigate to the directory of your subdomain/domain.
-
-6. Clone your repository:
+1. Install the Firebase CLI:
    ```
-   git clone https://github.com/yourusername/abstracta-feedback.git
-   cd abstracta-feedback
+   npm install -g firebase-tools
    ```
 
-7. Install dependencies:
+2. Login to Firebase:
    ```
-   npm install
+   firebase login
    ```
 
-8. Create a `.env` file and add your environment variables, including the database connection string and other necessary configurations.
+3. Initialize your project:
+   ```
+   firebase init
+   ```
+   Select Hosting and any other Firebase services you want to use.
 
-9. Build the application:
+4. Build your Next.js app:
    ```
    npm run build
    ```
 
-10. Set up a reverse proxy using Apache (Dreamhost uses Apache by default):
-    - Create or edit the `.htaccess` file in your domain's root directory
-    - Add the following rules:
-      ```
-      RewriteEngine On
-      RewriteRule ^$ http://127.0.0.1:3000/ [P,L]
-      RewriteCond %{REQUEST_FILENAME} !-f
-      RewriteCond %{REQUEST_FILENAME} !-d
-      RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
-      ```
-
-11. Start your Node.js application using a process manager like PM2:
-    ```
-    npm install -g pm2
-    pm2 start npm --name "abstracta-feedback" -- start
-    ```
-
-12. Ensure PM2 starts on server reboot:
-    ```
-    pm2 startup
-    pm2 save
-    ```
-
-13. Your application should now be accessible through your Dreamhost domain/subdomain.
-
-Remember to update your DNS settings if you're using a custom domain, and ensure your firewall settings allow traffic to your application's port.
-
-Note: Dreamhost shared hosting has limitations. If you encounter issues or need more control, consider upgrading to a VPS or dedicated server.
+5. Deploy to Firebase:
+   ```
+   firebase deploy
+   ```
 
 ## Contributing
 

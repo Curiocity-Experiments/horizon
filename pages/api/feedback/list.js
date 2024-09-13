@@ -1,47 +1,51 @@
 // pages/api/feedback/list.js
-import { PrismaClient } from '@prisma/client';
+import { db } from '../../../lib/firebase';
+import { collection, query, where, orderBy, limit, startAfter, getDocs } from 'firebase/firestore';
 import logger from '../../../lib/logger';
-
-const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { page = '1', limit = '10', category, sortBy = 'createdAt', sortOrder = 'desc' } = req.query;
+  const { page = '1', pageSize = '10', category, sortBy = 'createdAt', sortOrder = 'desc' } = req.query;
   const pageNumber = parseInt(page, 10);
-  const limitNumber = parseInt(limit, 10);
-  const skip = (pageNumber - 1) * limitNumber;
+  const pageSizeNumber = parseInt(pageSize, 10);
 
   try {
-    const where = category ? { categories: { some: { id: category } } } : {};
-    const orderBy = { [sortBy]: sortOrder };
+    let q = collection(db, 'feedback');
 
-    const [feedbackItems, totalCount] = await Promise.all([
-      prisma.feedback.findMany({
-        where,
-        orderBy,
-        skip,
-        take: limitNumber,
-        include: {
-          author: {
-            select: { name: true },
-          },
-          categories: {
-            select: { name: true },
-          },
-        },
-      }),
-      prisma.feedback.count({ where }),
-    ]);
+    if (category) {
+      q = query(q, where('category', '==', category));
+    }
 
-    logger.info(`Fetched feedback list: page ${pageNumber}, limit ${limitNumber}`);
+    q = query(q, orderBy(sortBy, sortOrder), limit(pageSizeNumber));
+
+    // If it's not the first page, we need to use startAfter
+    if (pageNumber > 1) {
+      // This is a simplified approach. You might need to store the last document of each page
+      // or implement a more sophisticated pagination method for production use.
+      const previousPageDocs = await getDocs(query(q, limit((pageNumber - 1) * pageSizeNumber)));
+      const lastVisibleDoc = previousPageDocs.docs[previousPageDocs.docs.length - 1];
+      q = query(q, startAfter(lastVisibleDoc));
+    }
+
+    const querySnapshot = await getDocs(q);
+    const feedbackItems = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt.toDate().toISOString() // Convert Firestore Timestamp to ISO string
+    }));
+
+    // For simplicity, we're not calculating total count here as it can be expensive in Firestore
+    // You might want to implement a separate counter or use Firebase Extensions for this
+
+    logger.info(`Fetched feedback list: page ${pageNumber}, limit ${pageSizeNumber}`);
     res.status(200).json({
       feedbackItems,
-      totalCount,
       currentPage: pageNumber,
-      totalPages: Math.ceil(totalCount / limitNumber),
+      // This is a placeholder. Implement proper pagination metadata as needed
+      hasNextPage: feedbackItems.length === pageSizeNumber
     });
   } catch (error) {
     logger.error('Error fetching feedback list:', error);
