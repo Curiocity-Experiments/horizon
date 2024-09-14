@@ -1,61 +1,94 @@
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Sun, Moon } from 'lucide-react';
-import logger from '../lib/logger'; // Import the logger
+// components/FeedbackSubmissionForm.js
 
-export default function Layout({ children, config }) {
-  const [darkMode, setDarkMode] = useState(false);
+import React, { useState } from 'react';
+import { useSession, signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
-  useEffect(() => {
+export default function FeedbackSubmissionForm() {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!session) {
+      signIn();
+      return;
+    }
+
     try {
-      const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-      setDarkMode(savedDarkMode);
-      if (savedDarkMode) {
-        document.documentElement.classList.add('dark');
+      const response = await fetch('/api/feedback/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description, category }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Feedback created:', data);
+        router.push('/feedback'); // Redirect to feedback list
+      } else {
+        setError('Failed to create feedback');
       }
     } catch (error) {
-      logger.error('Error accessing localStorage:', error);
-      // Fallback to light mode if there's an error
-      setDarkMode(false);
-    }
-  }, []);
-
-  const toggleDarkMode = () => {
-    try {
-      const newDarkMode = !darkMode;
-      setDarkMode(newDarkMode);
-      document.documentElement.classList.toggle('dark');
-      localStorage.setItem('darkMode', newDarkMode);
-    } catch (error) {
-      logger.error('Error toggling dark mode:', error);
-      // If localStorage fails, still toggle the UI
-      setDarkMode(!darkMode);
-      document.documentElement.classList.toggle('dark');
+      setError('Error submitting feedback: ' + error.message);
     }
   };
 
+  if (!session) {
+    return (
+      <div>
+        <p>You need to be signed in to submit feedback.</p>
+        <button onClick={() => signIn()}>Sign in</button>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-white dark:bg-gray-800 shadow-sm">
-        <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/">
-            <a className="text-2xl font-semibold text-gray-800 dark:text-white">
-              {config.name}
-            </a>
-          </Link>
-          <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
-            {darkMode ? <Sun className="text-yellow-400" /> : <Moon className="text-gray-600" />}
-          </button>
-        </nav>
-      </header>
-      <main className="flex-grow container mx-auto px-4 py-8">
-        {children}
-      </main>
-      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-        <div className="container mx-auto px-4 py-4 text-center text-sm text-gray-600 dark:text-gray-400">
-          © {new Date().getFullYear()} {config.name}. All rights reserved.
-        </div>
-      </footer>
-    </div>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && <p className="text-red-500">{error}</p>}
+      <div>
+        <label htmlFor="title" className="block mb-1">Title</label>
+        <input
+          type="text"
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          className="w-full p-2 border rounded"
+        />
+      </div>
+      <div>
+        <label htmlFor="description" className="block mb-1">Description</label>
+        <textarea
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+          className="w-full p-2 border rounded"
+        />
+      </div>
+      <div>
+        <label htmlFor="category" className="block mb-1">Category</label>
+        <select
+          id="category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          required
+          className="w-full p-2 border rounded"
+        >
+          <option value="">Select a category</option>
+          <option value="feature">Feature Request</option>
+          <option value="bug">Bug Report</option>
+          <option value="improvement">Improvement</option>
+        </select>
+      </div>
+      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        Submit Feedback
+      </button>
+    </form>
   );
 }

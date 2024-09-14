@@ -3,7 +3,7 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import { FirestoreAdapter } from "@next-auth/firebase-adapter"
-import { db } from "../../../lib/firebase"
+import { adminDb } from "../../../lib/firebase"
 
 export default NextAuth({
   providers: [
@@ -12,7 +12,7 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-  adapter: FirestoreAdapter(db),
+  adapter: FirestoreAdapter(adminDb),
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
@@ -35,15 +35,4 @@ export default NextAuth({
     signIn: "/auth/signin",
   },
   debug: process.env.NODE_ENV === 'development',
-  logger: {
-    error: (code, metadata) => {
-      console.error(code, metadata);
-    },
-    warn: (code) => {
-      console.warn(code);
-    },
-    debug: (code, metadata) => {
-      console.log(code, metadata);
-    },
-  },
-});
+})

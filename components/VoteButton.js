@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+// components/VoteButton.js
+
+import React, { useState, useEffect } from 'react';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 
-export default function VoteButton({ feedbackId, initialVoteCount, initialUserVote }) {
+export default function VoteButton({ feedbackId, initialVoteCount }) {
   const [voteCount, setVoteCount] = useState(initialVoteCount);
-  const [userVote, setUserVote] = useState(initialUserVote);
+  const [userVote, setUserVote] = useState(null);
+
+  useEffect(() => {
+    const savedVote = localStorage.getItem(`vote_${feedbackId}`);
+    if (savedVote) {
+      setUserVote(savedVote);
+    }
+  }, [feedbackId]);
 
   const handleVote = async (voteType) => {
     try {
@@ -18,14 +27,12 @@ export default function VoteButton({ feedbackId, initialVoteCount, initialUserVo
           // Remove vote
           setVoteCount(prev => prev + (voteType === 'upvote' ? -1 : 1));
           setUserVote(null);
-        } else if (userVote) {
-          // Change vote
-          setVoteCount(prev => prev + (voteType === 'upvote' ? 2 : -2));
-          setUserVote(voteType);
+          localStorage.removeItem(`vote_${feedbackId}`);
         } else {
-          // New vote
-          setVoteCount(prev => prev + (voteType === 'upvote' ? 1 : -1));
+          // New vote or change vote
+          setVoteCount(prev => prev + (voteType === 'upvote' ? 1 : -1) + (userVote ? (userVote === 'upvote' ? -1 : 1) : 0));
           setUserVote(voteType);
+          localStorage.setItem(`vote_${feedbackId}`, voteType);
         }
       }
     } catch (error) {
