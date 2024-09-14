@@ -1,13 +1,13 @@
 // pages/_app.js
 
 import { SessionProvider } from 'next-auth/react'
+import '../styles/globals.css'
 
 function MyApp({ Component, pageProps }) {
   return (
     <SessionProvider 
       session={pageProps.session}
-      refetchInterval={0}
-      refetchOnWindowFocus={false}
+      basePath="/api/auth"
     >
       <Component {...pageProps} />
     </SessionProvider>

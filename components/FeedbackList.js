@@ -9,6 +9,8 @@ import { Plus, Filter, ArrowUpDown } from 'lucide-react';
 import VoteButton from './VoteButton';
 import logger from '../lib/logger';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { debounce } from 'lodash';
 
 export default function FeedbackList({ config, initialFeedbackItems = [] }) {
   const [categories, setCategories] = useState([]);
@@ -21,53 +23,62 @@ export default function FeedbackList({ config, initialFeedbackItems = [] }) {
   const [hasMore, setHasMore] = useState(true);
   const [feedbackItems, setFeedbackItems] = useState(initialFeedbackItems);
 
-  // TODO: Implement infinite scrolling for better performance with large datasets
-  const fetchFeedbackItems = useCallback(async () => {
-    if (!hasMore) return;
+  const { data: session, status } = useSession();
 
-    setIsLoading(true);
-    const queryParams = new URLSearchParams({
-      category: selectedCategory,
-      sortBy,
-      sortOrder,
-      page: page.toString(),
-      pageSize: '10',
-    }).toString();
+  const debouncedFetchFeedbackItems = useCallback(
+    debounce(async () => {
+      if (!hasMore) return;
 
-    try {
-      const response = await fetch(`/api/feedback/list?${queryParams}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch feedback items');
+      setIsLoading(true);
+      const queryParams = new URLSearchParams({
+        category: selectedCategory,
+        sortBy,
+        sortOrder,
+        page: page.toString(),
+        pageSize: '10',
+      }).toString();
+
+      try {
+        const response = await fetch(`/api/feedback/list?${queryParams}`, {
+          headers: {
+            'Authorization': `Bearer ${session?.accessToken}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setFeedbackItems(prevItems => [...prevItems, ...data.feedbackItems]);
+        setHasMore(data.hasNextPage);
+        setPage(prevPage => prevPage + 1);
+      } catch (error) {
+        console.error('Error fetching feedback items:', error);
+        setError('Failed to load feedback items. Please try again later.');
+      } finally {
+        setIsLoading(false);
       }
-      const data = await response.json();
-      setFeedbackItems(prevItems => [...prevItems, ...data.feedbackItems]);
-      setHasMore(data.hasNextPage);
-      setPage(prevPage => prevPage + 1);
-    } catch (error) {
-      logger.error('Error fetching feedback items:', error);
-      setError('Failed to load feedback items. Please try again later.');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [selectedCategory, sortBy, sortOrder, page, hasMore]);
+    }, 300),
+    [hasMore, page, selectedCategory, sortBy, sortOrder, session]
+  );
 
-  // TODO: Implement debounce for filter and sort operations to reduce API calls
   useEffect(() => {
-    setPage(1);
-    setFeedbackItems([]);
-    setHasMore(true);
-    fetchFeedbackItems();
-  }, [selectedCategory, sortBy, sortOrder]);
+    if (status === 'authenticated') {
+      setPage(1);
+      setFeedbackItems([]);
+      setHasMore(true);
+      debouncedFetchFeedbackItems();
+    }
+  }, [selectedCategory, sortBy, sortOrder, debouncedFetchFeedbackItems, status]);
 
   useEffect(() => {
     if (!initialFeedbackItems) {
-      fetchFeedbackItems();
+      debouncedFetchFeedbackItems();
     }
-  }, [fetchFeedbackItems, initialFeedbackItems]);
+  }, [debouncedFetchFeedbackItems, initialFeedbackItems]);
 
   const handleLoadMore = () => {
     if (!isLoading) {
-      fetchFeedbackItems();
+      debouncedFetchFeedbackItems();
     }
   };
 
@@ -81,11 +92,11 @@ export default function FeedbackList({ config, initialFeedbackItems = [] }) {
         const data = await response.json();
         setCategories(data);
       } catch (error) {
-        logger.error('Error fetching categories:', error);
+        console.error('Error fetching categories:', error);
         setError('Failed to load categories. Please try again later.');
       }
     };
-  
+
     fetchCategories();
   }, []);
 

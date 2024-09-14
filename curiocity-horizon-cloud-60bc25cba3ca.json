@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "curiocity-horizon-cloud",
+  "private_key_id": "60bc25cba3ca9d7723aeea18d2d289cbe82a80af",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC2wzezGfiMxU/u\nGfSoA5iAnEAWLJK/ba6XKlujVYRuFhHFRbsz6zp3JUfdjorHidnACzVgNZxO6FFw\n1aXjMqeZQgctCgUtXhKqW1Bn5gR9tLeId0mrhKXOEPR309QuYYLxwajuN2luMPYJ\nwATlOG2w2nqFgDHRpiSkvx1oVoWgnex8GRFbOP8U5pXeZQaNqCXhIrgYpc7lwA2t\nVDjdIizFJof1CN/9k9pmKX6GrddVJgCveVs/WfOM5m9+SHxHlkpM7Bqc/yYV8gbC\nNWdm8mYBVBvGo4bDWghHgl5ztDm/lzpfWzdQH+nPeCEitKudXjwdyaUzDpOxKMYA\nLvGzit1JAgMBAAECggEADUAfGDGgVxhxIJqqJcpI8r4hWVo284EQwO31weRP2yln\ndW2GUo/R59SAntwYTLo+WtGVN5n7cK8gRHWA9vVzuEVUvtu0n2LsKITBUh8XoUOK\ncO7xHOnbmZKaHtvxTMGOHFgFluvWjYIoPHG7CSFrtoBIlMhEFGaezoD6sVdgjdH1\n3I/1KLKVoKjXBZjUSacPobinS7AgsUM9jfMO2dP1zxlJMJmUKwYRWrfBq4/Oq7pr\nKt9jqY4ITYKd1HG38Lf+7cg2lcPsc0rQ9ampBoIuEzmCPajWZoz6aNvYbEsGsmUO\nG90Ft7nViA8pqoZJhCYiUPJaHCG5/ovlMSZOEAKWwQKBgQDqui7nC5+rjzlxoIjC\nt70bbDZSf1dXB/guKA0TLt9NlTh6P9HO1zcX9FNm5pkG/d3xF45g8w7MMGWDEOHl\nbi82B0pniItdcvcyaQ5lknLLaPLUDMdcnbI2a4fSVeDdMTcmyJ5XncB85rX2dKW8\nHTvIdcQ2iZDwGX8vuAWHMhAx8QKBgQDHU2vWR78hgrAYVotfsP47ocLiF4TrCS7Q\n/YblMfm5tku7Oiu8/MGLXcLIfR2qCC8l6PlOrG2JEPis5vkkk/UseZ2xW2HAASuu\n2bmgD1JlXoLEXPGT6kMLKsLZejqJtb8QEHDEZPKbAeHH4pCQKtaKOgw3wvTxx/8o\nsTJSRVEI2QKBgFnLVcv/T1rDFLeaMRdEUOyfrfxLSK87lj6aBb5z7OryDcP+jBWz\nkRjx18ICr0HUdkYXu9jswplsXjkQiUpKp3bkvRr0SlQ6ecRoGiDTMGUORe7G4LFW\nhml5I2FchwQ3IqEMmD5uU8e0PqIEp65aBJfALYqrf63KIzSvEjZQ+Y8RAoGAIztb\nlESaRBIVjje96uweA+xTxiLiG6lD3Szy6xAqU+kk+bMOiBklHL018LosxCEuNEU5\ny+4ubkvRqL4qy4xbicD1XqQIYyfR0NYrOV978O8DrjG/gaWmtBKa3lX8gtrdKrm9\nNPmi6EMs5WfmpZTs1wHrpu+O3C29rDOl8WTPLgECgYEAzQmtVA3Q+fYhZQNgI720\n0wF0K+RXPaNudMLEJvNaBjDRoezBv/sSriIZLNBU7C9s8yzUO7P0tY2BVOw1djlw\ny6TWisrciDJo3lo6isZNUU+pNlCtfKIfj166meo8+4amV+L0EK03ymVl8BSKxP8D\n5klk6GVxypI1P5sQli7Q0zk=\n-----END PRIVATE KEY-----\n",
+  "client_email": "curiocity-horizon-service@curiocity-horizon-cloud.iam.gserviceaccount.com",
+  "client_id": "114174126584183001220",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/curiocity-horizon-service%40curiocity-horizon-cloud.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

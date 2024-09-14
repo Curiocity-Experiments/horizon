@@ -12,6 +12,8 @@
     "@next-auth/firebase-adapter": "^2.0.1",
     "express-rate-limit": "^7.4.0",
     "firebase": "^9.23.0",
+    "firebase-admin": "^12.5.0",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.263.1",
     "next": "^12.3.4",
     "next-api-rate-limit": "^1.0.3",

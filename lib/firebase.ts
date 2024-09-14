@@ -1,11 +1,8 @@
-// lib/firebase.ts
-
-// TODO: Implement connection pooling for Firestore to improve performance
-// TODO: Add retry logic for failed Firebase operations
-
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
 import { getFirestore, Firestore } from 'firebase/firestore';
 import { getAuth, Auth } from 'firebase/auth';
+import admin from 'firebase-admin';
+import { getApps as getAdminApps } from 'firebase-admin/app';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -13,52 +10,43 @@ const firebaseConfig = {
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
 let app: FirebaseApp;
 let db: Firestore;
 let auth: Auth;
+let adminDb: admin.firestore.Firestore | undefined;
 
-if (typeof window !== 'undefined' && !getApps().length) {
-  app = initializeApp(firebaseConfig);
-  db = getFirestore(app);
-  auth = getAuth(app);
+if (typeof window === 'undefined') {
+  if (!getAdminApps().length) {
+    try {
+      console.log('Initializing Admin Firebase...');
+      const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY || '{}');
+      console.log('Service account project_id:', serviceAccount.project_id);
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+        databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL
+      });
+      adminDb = admin.firestore();
+      console.log('Admin Firebase initialized successfully');
+    } catch (error) {
+      console.error('Error initializing Admin Firebase:', error);
+    }
+  } else {
+    console.log('Admin Firebase already initialized, getting Firestore instance');
+    adminDb = admin.firestore();
+  }
 } else {
-  // For server-side rendering, initialize with a dummy app
   if (!getApps().length) {
     app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    auth = getAuth(app);
+    console.log('Client Firebase initialized successfully');
   } else {
-    app = getApps()[0];
+    console.log('Client Firebase already initialized');
   }
-  db = getFirestore(app);
-  auth = getAuth(app);
 }
 
-// TODO: Implement a mechanism to refresh Firebase token before expiration
-export { app, db, auth };
-
-// Client-side only exports
-// TODO: Implement lazy loading for these functions to reduce initial bundle size
-export const getRemoteConfig = async () => {
-  if (typeof window !== 'undefined') {
-    const { getRemoteConfig } = await import('firebase/remote-config');
-    return getRemoteConfig(app);
-  }
-  return null;
-};
-
-export const fetchAndActivate = async (remoteConfig: any) => {
-  if (typeof window !== 'undefined') {
-    const { fetchAndActivate } = await import('firebase/remote-config');
-    return fetchAndActivate(remoteConfig);
-  }
-};
-
-export const getValue = async (remoteConfig: any, key: string) => {
-  if (typeof window !== 'undefined') {
-    const { getValue } = await import('firebase/remote-config');
-    return getValue(remoteConfig, key);
-  }
-  return null;
-};
+export { app, db, auth, adminDb };

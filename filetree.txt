@@ -1,37 +1,14 @@
 ./
-├── .git/
-│   ├── hooks/
-│   ├── info/
-│   ├── logs/
-│   ├── objects/
-│   ├── refs/
-│   ├── .DS_Store
-│   ├── COMMIT_EDITMSG
-│   ├── config
-│   ├── description
-│   ├── FETCH_HEAD
-│   ├── HEAD
-│   ├── index
-│   ├── ORIG_HEAD
-│   └── packed-refs
-├── .next/
-│   ├── cache/
-│   ├── server/
-│   ├── static/
-│   ├── build-manifest.json
-│   ├── BUILD_ID
-│   ├── export-marker.json
-│   ├── images-manifest.json
-│   ├── next-server.js.nft.json
-│   ├── package.json
-│   ├── prerender-manifest.json
-│   ├── react-loadable-manifest.json
-│   ├── required-server-files.json
-│   ├── routes-manifest.json
-│   └── trace
 ├── __tests__/
 │   ├── components/
+│   │   ├── FeedbackList.test.js
+│   │   └── FeedbackSubmissionForm.test.js
 │   ├── pages/
+│   │   ├── api/
+│   │   │   └── feedback/
+│   │   │       ├── create.test.js
+│   │   │       └── list.test.js
+│   │   └── .DS_Store
 │   └── .DS_Store
 ├── components/
 │   ├── FeedbackList.js
@@ -43,8 +20,15 @@
 ├── hooks/
 │   └── useRemoteConfig.js
 ├── images/
-│   ├── favicon/
-│   └── .DS_Store
+│   └── favicon/
+│       ├── about.txt*
+│       ├── android-chrome-192x192.png*
+│       ├── android-chrome-512x512.png*
+│       ├── apple-touch-icon.png*
+│       ├── favicon-16x16.png*
+│       ├── favicon-32x32.png*
+│       ├── favicon.ico*
+│       └── site.webmanifest*
 ├── lib/
 │   ├── auth.js
 │   ├── firebase.ts
@@ -52,10 +36,25 @@
 │   └── validationMiddleware.js
 ├── pages/
 │   ├── api/
+│   │   ├── admin/
+│   │   │   └── categories.ts
+│   │   ├── auth/
+│   │   │   ├── auth.js
+│   │   │   ├── firebaseAuth.js
+│   │   │   ├── nextAuth.js
+│   │   │   ├── session.js
+│   │   │   └── signin.js
+│   │   ├── feedback/
+│   │   │   ├── create.js
+│   │   │   ├── list.js
+│   │   │   └── vote.ts
+│   │   ├── .DS_Store
+│   │   └── categories.js
 │   ├── .DS_Store
 │   ├── _app.js
 │   ├── _document.js
 │   ├── admin.js
+│   ├── categories.js
 │   ├── feedback.js
 │   ├── index.js
 │   ├── profile.js
@@ -63,10 +62,12 @@
 ├── styles/
 │   └── globals.css
 ├── .DS_Store
-├── .env
 ├── .env.example
+├── .env.local
+├── .eslintrc.json
 ├── .gitignore
 ├── contributing.md
+├── curiocity-horizon-firebase-adminsdk-j1x58-062dbb5415.json
 ├── database.rules.json
 ├── filetree.txt
 ├── firebase-admin-key.json
