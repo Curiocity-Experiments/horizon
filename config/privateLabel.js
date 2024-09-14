@@ -1,5 +1,8 @@
 // config/privateLabel.js
 
+// TODO: Implement a caching mechanism for config to improve performance
+// TODO: Add validation for config objects to ensure all required fields are present
+
 const defaultConfig = {
   name: 'Abstracta Feedback',
   logo: '/logo.svg',
@@ -33,5 +36,6 @@ const configs = {
 };
 
 export function getConfig(hostname = '') {
+  // TODO: Implement fallback mechanism if hostname is not found in configs
   return configs[hostname] || defaultConfig;
 }

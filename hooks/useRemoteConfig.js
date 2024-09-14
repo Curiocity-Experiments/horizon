@@ -1,3 +1,7 @@
+// hooks/useRemoteConfig.js
+
+// TODO: Implement caching mechanism for remote config to reduce API calls
+// TODO: Add error retry logic for better resilience
 import { useState, useEffect } from 'react';
 import { getRemoteConfig, fetchAndActivate, getValue } from '../lib/firebase';
 
@@ -8,6 +12,7 @@ export function useRemoteConfig() {
 
     useEffect(() => {
         async function fetchConfig() {
+            // TODO: Implement timeout for fetch operation to prevent long-running requests
             try {
                 const remoteConfig = await getRemoteConfig();
                 if (remoteConfig) {
@@ -21,6 +26,7 @@ export function useRemoteConfig() {
                 setLoading(false);
             } catch (err) {
                 console.error('Remote Config Error:', err);
+                // TODO: Implement more sophisticated error handling and reporting
                 setError(err);
                 setLoading(false);
             }

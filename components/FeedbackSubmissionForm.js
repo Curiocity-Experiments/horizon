@@ -1,84 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import logger from '../lib/logger';
+import Link from 'next/link';
+import { Sun, Moon } from 'lucide-react';
+import logger from '../lib/logger'; // Import the logger
 
-/**
- * Schema for feedback form validation
- */
-const schema = yup.object().shape({
-  title: yup.string().required('Title is required').min(3, 'Title must be at least 3 characters'),
-  description: yup.string().required('Description is required').min(10, 'Description must be at least 10 characters'),
-  category: yup.string().required('Category is required'),
-});
-
-/**
- * FeedbackSubmissionForm component for submitting new feedback.
- * Handles form validation, submission, and displays success/error messages.
- * 
- * @param {Object} props - Component props
- * @param {Object} props.config - Private label configuration
- */
-export default function FeedbackSubmissionForm({ config }) {
-  const [categories, setCategories] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-  const router = useRouter();
-
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema)
-  });
+export default function Layout({ children, config }) {
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    fetchCategories();
+    try {
+      const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+      setDarkMode(savedDarkMode);
+      if (savedDarkMode) {
+        document.documentElement.classList.add('dark');
+      }
+    } catch (error) {
+      logger.error('Error accessing localStorage:', error);
+      // Fallback to light mode if there's an error
+      setDarkMode(false);
+    }
   }, []);
 
-  /**
-   * Fetches categories from the API
-   */
-  const fetchCategories = async () => {
+  const toggleDarkMode = () => {
     try {
-      const response = await fetch('/api/admin/categories');
-      if (!response.ok) {
-        throw new Error('Failed to fetch categories');
-      }
-      const data = await response.json();
-      setCategories(data);
+      const newDarkMode = !darkMode;
+      setDarkMode(newDarkMode);
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('darkMode', newDarkMode);
     } catch (error) {
-      logger.error('Error fetching categories:', error);
-      setError('Failed to load categories. Please try again later.');
+      logger.error('Error toggling dark mode:', error);
+      // If localStorage fails, still toggle the UI
+      setDarkMode(!darkMode);
+      document.documentElement.classList.toggle('dark');
     }
   };
 
-  /**
-   * Handles form submission
-   * @param {Object} data - Form data
-   */
-  const onSubmit = async (data) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await fetch('/api/feedback/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to submit feedback');
-      }
-      setSuccess(true);
-      setTimeout(() => router.push('/feedback'), 2000);
-    } catch (error) {
-      logger.error('Error submitting feedback:', error);
-      setError('Failed to submit feedback. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // ... rest of the component code ...
+  return (
+    <div className="min-h-screen flex flex-col">
+      <header className="bg-white dark:bg-gray-800 shadow-sm">
+        <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <Link href="/">
+            <a className="text-2xl font-semibold text-gray-800 dark:text-white">
+              {config.name}
+            </a>
+          </Link>
+          <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+            {darkMode ? <Sun className="text-yellow-400" /> : <Moon className="text-gray-600" />}
+          </button>
+        </nav>
+      </header>
+      <main className="flex-grow container mx-auto px-4 py-8">
+        {children}
+      </main>
+      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+        <div className="container mx-auto px-4 py-4 text-center text-sm text-gray-600 dark:text-gray-400">
+          © {new Date().getFullYear()} {config.name}. All rights reserved.
+        </div>
+      </footer>
+    </div>
+  );
 }
